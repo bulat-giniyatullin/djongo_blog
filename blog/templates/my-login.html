@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <h1> Авторизуйтесь </h1>
+
+    <form method="POST" autocomplete="off">
+
+        {% csrf_token %}
+
+        {{loginform.as_p}}
+
+        <input type="submit" value="Login"/>
+    </form>
+</html>

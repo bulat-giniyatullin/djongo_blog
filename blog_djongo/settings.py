@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import djongo
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,16 +24,12 @@ SECRET_KEY = 'django-insecure-&u49)=t$8pb86ne@gu5w+7jbu!c@m)e0l=6@b8itc)le^w_pv4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 SITE_ID = 1
 
 # Application definition
 
 INSTALLED_APPS = [
-    'allauth',
-    'allauth.account',
-    'crispy_forms',
-    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -43,31 +38,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'djongo'
+    'djongo',
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend'
-)
-
-AUTH_USER_MODEL = 'blog.CustomUser'  # Замените 'your_app' и 'CustomUser' на свои значения
-LOGIN_REDIRECT_URL = 'home'
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'blog_djongo.urls'
+DJANGO_SETTINGS_MODULE = 'blog_djongo.settings'
 
 TEMPLATES = [
     {
@@ -90,18 +77,23 @@ WSGI_APPLICATION = 'blog_djongo.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+'''DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'djongo_mongodb'}}'''
 
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'django',
+        'ENFORCE_SCHEMA': True,
+        'NAME': 'django_mongodb_docker',
         'CLIENT': {
-                  'host': 'mongodb://mongodb:27017',
-                  'username': 'root',
-                  'password': 'password',
-                  'authSource': 'admin',
-                  'authMechanism': 'SCRAM-SHA-1',
-              }
+                    'host': 'mongodb://mongodb:27017',
+                    'username': 'root',
+                    'password': 'mongoadmin',
+                    'authSource': 'admin',
+                    'authMechanism': 'SCRAM-SHA-1',
+                }
     }
 }
 
@@ -129,20 +121,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
-
-LANGUAGES = [
-    ('en', ('English')),
-    ('ru', ('Russian')),
-]
-
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
